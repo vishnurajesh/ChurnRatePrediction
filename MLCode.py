@@ -100,11 +100,6 @@ def upload():
         df_final[i] = le.transform(df_final[i])
 
 
-
-
-
-
-
     scaler = MinMaxScaler(feature_range=(0, 5))
     col = 'Salary'
     df_final[col] = df_final[col].astype(float)
@@ -123,14 +118,17 @@ def upload():
 
     ## These 2 variables are be passed to the frontend and both of them are in json formate
 
-    finaldata = {
-        "output": stringTobePassed,
-        "df": df_Churned.to_dict()
-    }
+    finaldata = df_initial.to_dict();
+    finaldata["output"] = stringTobePassed;
+    finaldata["td"] = df_Churned.to_dict();
 
-    # Convert the dictionary to a JSON string
-    json_string = json.dumps(finaldata, indent=4)
-    return json_string
+    # {
+    #     "output": stringTobePassed,
+    #     "df": df_Churned.to_dict()
+    # }
+    # # Convert the dictionary to a JSON string
+    # json_string = json.dumps(finaldata, indent=4)
+    return finaldata;
 
 
 if __name__ == "__main__":
