@@ -25,7 +25,6 @@ from sklearn.model_selection import train_test_split
 import json
 from flask import Flask, request
 import pandas as pd
-import time
 
 import time
 app = Flask(__name__)
@@ -39,10 +38,9 @@ def upload():
     with open("uploads/" + file.filename, "wb") as f:
         f.write(file.read())
 
-
     df_initial = pd.read_csv("uploads/" + file.filename)
     #import dataset
-    
+
     df = df_initial[df_initial['Year'].isin([2018, 2019])]
 
     # Filter the rows for "2020"
@@ -117,18 +115,22 @@ def upload():
     predictions = logreg.predict(df_processed)
     df_final['Churned'] = predictions
 
-    df_Churned = df_final[df_final['Churned'] == 1]
 
+    ### final 2 variables to be pased to frontend
+    df_Churned = df_final[df_final['Churned'] == 1]
     stringTobePassed = "The prediction is made with an aaccuracy of "+ str(accuracy * 100) + "%" ## the v
-    dictionary = {'output':stringTobePassed}
 
 
     ## These 2 variables are be passed to the frontend and both of them are in json formate
 
-    string_json = json.dumps(dictionary, indent=4)
-    df_json = df_Churned.to_json("churned.json")
-    return df_json.to_json()
+    finaldata = {
+        "output": stringTobePassed,
+        "df": df_Churned.to_dict()
+    }
 
+    # Convert the dictionary to a JSON string
+    json_string = json.dumps(finaldata, indent=4)
+    return json_string
 
 
 if __name__ == "__main__":
