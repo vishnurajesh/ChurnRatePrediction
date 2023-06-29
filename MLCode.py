@@ -68,7 +68,7 @@ def upload():
     df.head()
 
 
-    df = df.drop(['Year', 'Employee_id'], axis=1)
+    df = df.drop(['Year'], axis=1)
     X = df.drop('Churned', axis=1)  # Drop the 'Target' column to get features
     y = df['Churned']
 
@@ -105,7 +105,7 @@ def upload():
     df_final[col] = df_final[col].astype(float)
     df_final[[col]] = scaler.fit_transform(df_final[[col]])
 
-    df_final = df_final.drop(['Year', 'Employee_id'], axis=1)
+    df_final = df_final.drop(['Year'], axis=1)
     df_processed = df_final.drop('Churned', axis=1)  # Drop the 'Target' column to get features
     predictions = logreg.predict(df_processed)
     df_final['Churned'] = predictions

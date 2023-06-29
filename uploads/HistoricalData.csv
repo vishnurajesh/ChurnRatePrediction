@@ -1,4 +1,4 @@
-Year,Employee_id,Age,Gender,Department,Job_level,Salary,Total years of service,Years of service within company,Overtime Worked,Stock Option,Number of previous jobs,Marital Status,Years Under Current Manager,Job Satisfaction,Performance Rating, Upskilling Opportunities,Relationship with Manager,Churned
+Year,Employee_id,Age,Gender,Department,Job_level,Salary,Total years of service,Years of service within company,Overtime Worked,Stock Option,Number of previous jobs,Marital Status,Years Under Current Manager,Job Satisfaction,Performance Rating,Upskilling Opportunities,Relationship with Manager,Churned
 2018,1001,32,Female,Sales,Assistant,78000,10,3,Yes,No,7,No,4,5,4,8,1,No
 2018,1002,25,Male,Finance,Junior,49000,2,1,No,Yes,6,No,3,1,1,10,1,Yes
 2018,1003,33,Female,Marketing,Senior,91000,13,4,Yes,No,9,No,3,2,3,11,1,Yes
