@@ -117,7 +117,7 @@ def upload():
     stringTobePassed = "The system has predicted that the following"+ str(recCount) +" employees will leave the organisation with an accuracy of "+ str(round(accuracy * 100,2)) + "%"
 
     ## These 2 variables are be passed to the frontend and both of them are in json formate
-    df_initial = df_initial[df_initial['Churned'] == 1]
+    df_initial = df_initial[df_initial['Churned'] == "Yes"]
     finaldata = df_initial.to_dict();
     finaldata["output"] = stringTobePassed;
     finaldata["td"] = df_Churned.to_dict();
