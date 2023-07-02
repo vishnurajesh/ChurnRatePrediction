@@ -114,7 +114,7 @@ def upload():
     ### final 2 variables to be pased to frontend
     df_Churned = df_final[df_final['Churned'] == 1]
     recCount  = len(df_Churned)
-    stringTobePassed = "Based on our advanced system, "+ str(recCount) +" employees have been predicted to be at risk of churn, with an accuracy rate of "+ str(round(accuracy * 100,2)) + "%"
+    stringTobePassed = "  Based on our advanced system, "+ str(recCount) +" employees have been predicted to be at risk of churn, with an accuracy rate of "+ str(round(accuracy * 100,2)) + "%"
 
 
     ## These 2 variables are be passed to the frontend and both of them are in json formate
