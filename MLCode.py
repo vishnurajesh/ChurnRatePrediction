@@ -41,10 +41,10 @@ def upload():
     df_initial = pd.read_csv("uploads/" + file.filename)
     #import dataset
 
-    df = df_initial[df_initial['Year'].isin([2018, 2019])]
+    df = df_initial[df_initial['Year'].isin([2021, 2022])]
 
-    # Filter the rows for "2020"
-    df_final = df_initial[df_initial['Year'] == 2020]
+    # Filter the rows for "2023"
+    df_final = df_initial[df_initial['Year'] == 2023]
 
     print(df.head())
     print(df_final.head())
