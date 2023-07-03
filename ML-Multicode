@@ -91,6 +91,19 @@ scaler = Normalizer(norm = 'l2')
 "norm = 'l2' is default"
 df_scaled[col_names] = scaler.fit_transform(features.values)
 
+################## correlation ###########################
+correlation = X.corr()
+sns.heatmap(correlation, annot = True)
+
+#Absolute correlation with Target variable
+abs(df.corr()['Variable Name']).sort_values(ascending = False)
+
+def correlation(X):
+    correlation = X.corr()
+    heatmap = sns.heatmap(correlation,annot = True)
+    return correlation,heatmap
+#NOTE : Only Numerical data
+
 ########################### Models ########################
 models = []
 models.append(('Logistic Regression', LogisticRegression(solver='liblinear', random_state=7,
