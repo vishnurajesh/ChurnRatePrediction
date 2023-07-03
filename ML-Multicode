@@ -1,0 +1,163 @@
+import pandas as pd
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn import naive_bayes, ensemble, discriminant_analysis, gaussian_process
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+from sklearn.naive_bayes import GaussianNB
+from sklearn.svm import SVC
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.ensemble import RandomForestClassifier
+
+from sklearn import feature_selection
+from sklearn import model_selection
+from sklearn import metrics
+
+from sklearn.metrics import confusion_matrix, classification_report, precision_recall_curve
+from sklearn.metrics import auc, roc_auc_score, roc_curve, recall_score, log_loss
+from sklearn.metrics import f1_score, accuracy_score, roc_auc_score, make_scorer
+from sklearn.metrics import average_precision_score
+import numpy as np
+
+#import dataset
+
+df = pd.read_csv('HistoricalData1.csv')
+
+test_org_df = df[df['Year'] == 2020]
+df = df[df['Year'].isin([2018, 2019])]
+
+
+le = LabelEncoder()
+cols = ['Gender', 'Churned', 'Department', 'Job_level', 'Years of service within company', 'Overtime Worked', 'Stock Option', 'Marital Status']
+for i in cols:
+    le.fit(df[i])
+    df[i] = le.transform(df[i])
+
+
+
+train_df = df.drop(['Year', 'Employee_id'], axis=1)
+
+scaler = MinMaxScaler(feature_range=(0, 5))
+col = 'Salary'
+train_df[col] = train_df[col].astype(float)
+train_df[[col]] = scaler.fit_transform(train_df[[col]])
+train_df.head()
+
+
+
+target = train_df['Churned'].copy()
+train_df.drop(['Churned'], axis=1, inplace=True)
+
+X_train, X_test, y_train, y_test = train_test_split(train_df,
+                                                    target,
+                                                    test_size=0.25,
+                                                    random_state=7,
+                                                    stratify=target)
+
+############### scaling ###############################
+
+#1-MINMAX SCALER
+mm = MinMaxScaler()
+numdatamm = mm.fit_transform(numdata)
+numdatamm = pd.DataFrame(numdatamm,columns = numdata.columns)
+
+#2-ROBUST SCALER
+rs = RobustScaler()
+numdatars = rs.fit_transform(numdata)
+numdatars = pd.DataFrame(numdatars,columns = numdata.columns)
+
+#3-STANDARD SCALER
+sc = StandardScaler()
+numdatasc = sc.fit_transform(numdata)
+numdatasc = pd.DataFrame(numdatasc,columns = numdata.columns)
+
+#4-MaxAbs Scaler
+scaler = MaxAbsScaler()
+df_scaled = scaler.fit_transform(numdata.values)
+df_scaled = pd.DataFrame(df_scaled,columns = numdata.columns)
+
+#5-Quantile Transformer Scaler
+scaler = QuantileTransformer()
+df_scaled = scaler.fit_transform(numdata.values)
+df_scaled = pd.DataFrame(df_scaled,columns = numdata.columns)
+
+#6-Unit Vector Scaler/Normalizer
+from sklearn.preprocessing import Normalizer
+scaler = Normalizer(norm = 'l2')
+"norm = 'l2' is default"
+df_scaled[col_names] = scaler.fit_transform(features.values)
+
+########################### Models ########################
+models = []
+models.append(('Logistic Regression', LogisticRegression(solver='liblinear', random_state=7,
+                                                         class_weight='balanced')))
+models.append(('Random Forest', RandomForestClassifier(
+    n_estimators=100, random_state=7)))
+models.append(('SVM', SVC(gamma='auto', random_state=7)))
+models.append(('KNN', KNeighborsClassifier()))
+models.append(('Gaussian NB', GaussianNB()))
+
+acc_results = []
+auc_results = []
+names = []
+# set table to table to populate with performance results
+col = ['Algorithm', 'ROC AUC Mean', 'ROC AUC STD',
+       'Accuracy Mean', 'Accuracy STD']
+df_results = pd.DataFrame(columns=col)
+i = 0
+# evaluate each model using cross-validation
+for name, model in models:
+    kfold = model_selection.KFold(
+        n_splits=10)  # 10-fold cross-validation
+
+    cv_acc_results = model_selection.cross_val_score(  # accuracy scoring
+        model, X_train, y_train, cv=kfold, scoring='accuracy')
+
+    cv_auc_results = model_selection.cross_val_score(  # roc_auc scoring
+        model, X_train, y_train, cv=kfold, scoring='roc_auc')
+
+    acc_results.append(cv_acc_results)
+    auc_results.append(cv_auc_results)
+    names.append(name)
+    df_results.loc[i] = [name,
+                         round(cv_auc_results.mean()*100, 2),
+                         round(cv_auc_results.std()*100, 2),
+                         round(cv_acc_results.mean()*100, 2),
+                         round(cv_acc_results.std()*100, 2)
+                         ]
+    i += 1
+df_results.sort_values(by=['ROC AUC Mean'], ascending=False)
+
+print(df_results.head())
+
+
+###################### Real Prediction #######################
+
+trained_model = models[0][1].fit(train_df, target)
+
+
+
+for i in cols:
+    le.fit(test_org_df[i])
+    test_org_df[i] = le.transform(test_org_df[i])
+    
+col = 'Salary'
+test_org_df[col] = test_org_df[col].astype(float)
+test_org_df[[col]] = scaler.fit_transform(test_org_df[[col]])
+
+test_df = test_org_df.drop(['Year', 'Employee_id', 'Churned'], axis=1)
+
+pred = trained_model.predict(test_df)
+test_org_df["Churned"]=pred
+
+index = np.where(pred == 1)
+
+print(len(index[0]))
+
+ouptputdf=test_org_df.iloc[index[0]]
+ouptputdf.to_csv("LROutput.csv")
+
